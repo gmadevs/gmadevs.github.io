@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Giorgio Maria Agazzi</title>
+  <meta name="description" content="Giorgio Maria Agazzi, neuroradiologist. Open-source tools for radiology and Radiopaedia.org.">
+  <meta property="og:title" content="Giorgio Maria Agazzi">
+  <meta property="og:description" content="Neuroradiologist. Open-source tools for radiology and Radiopaedia.org.">
+  <meta property="og:image" content="assets/giorgio.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Schibsted+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --text: #141414;
+      --muted: #55504b;
+      --accent: #66023c;
+      --accent-soft: rgba(102, 2, 60, 0.08);
+      --green: #1f4e3d;
+      --card: rgba(255, 255, 255, 0.62);
+      --card-border: rgba(20, 20, 20, 0.07);
+      --blob-1: #c48b9f;
+      --blob-2: #e8b4b8;
+      --stripe: rgba(102, 2, 60, 0.03);
+      --shadow: 0 2px 4px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+      --shadow-hover: 0 4px 8px rgba(0,0,0,.08), 0 16px 36px rgba(0,0,0,.1);
+      --radius: 10px;
+      --title: "Schibsted Grotesk", system-ui, sans-serif;
+      --body: "Literata", Georgia, serif;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #161214; --text: #efe9e4; --muted: #b3aaa3; --accent: #e08bb4;
+        --accent-soft: rgba(224, 139, 180, 0.12); --green: #7fc3a6;
+        --card: rgba(255,255,255,0.04); --card-border: rgba(255,255,255,0.08);
+        --blob-1: #5a1a38; --blob-2: #3d1f2a; --stripe: rgba(224,139,180,0.025);
+        --shadow: 0 2px 4px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3);
+        --shadow-hover: 0 4px 8px rgba(0,0,0,.4), 0 16px 36px rgba(0,0,0,.4);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #161214; --text: #efe9e4; --muted: #b3aaa3; --accent: #e08bb4;
+      --accent-soft: rgba(224, 139, 180, 0.12); --green: #7fc3a6;
+      --card: rgba(255,255,255,0.04); --card-border: rgba(255,255,255,0.08);
+      --blob-1: #5a1a38; --blob-2: #3d1f2a; --stripe: rgba(224,139,180,0.025);
+      --shadow: 0 2px 4px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3);
+      --shadow-hover: 0 4px 8px rgba(0,0,0,.4), 0 16px 36px rgba(0,0,0,.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body); color: var(--text); background: var(--bg);
+      line-height: 1.55; overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: #fbd714; color: #141414; }
+    a { color: var(--accent); }
+
+    /* Background: blurred blobs + diagonal hairlines, as on jaisal.in */
+    .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); }
+    .blob { position: absolute; border-radius: 50%; filter: blur(110px); opacity: .35;
+            animation: float 22s infinite alternate ease-in-out; }
+    .blob.one { width: 500px; height: 500px; background: var(--blob-1); top: -150px; left: -150px; }
+    .blob.two { width: 600px; height: 600px; background: var(--blob-2); bottom: -180px; right: -150px;
+                animation-delay: -11s; animation-direction: alternate-reverse; }
+    .bg::after { content: ""; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, var(--stripe) 10px, var(--stripe) 11px); }
+    @keyframes float {
+      0% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(50px,30px) scale(1.08); }
+      100% { transform: translate(-30px,50px) scale(.93); }
+    }
+    @media (prefers-reduced-motion: reduce) { .blob { animation: none; } html { scroll-behavior: auto; } }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+    /* Top-right controls */
+    .controls { position: fixed; top: 20px; right: 20px; z-index: 10; display: flex; gap: 8px; }
+    .controls button {
+      height: 40px; min-width: 40px; padding: 0 14px; border: 0; border-radius: var(--radius);
+      background: var(--accent); color: var(--bg); font: 500 .9rem var(--title);
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      text-decoration: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,.1);
+      transition: transform .2s ease;
+    }
+    .controls button { padding: 0; }
+    .controls button:hover { transform: translateY(-2px); }
+    .controls svg { width: 18px; height: 18px; }
+
+    /* Hero */
+    #home { min-height: 100vh; display: flex; align-items: center; padding: 80px 0 40px; }
+    .hero { display: flex; align-items: center; gap: 56px; }
+    .hero-image { flex: 0 0 auto; }
+    .profile {
+      width: 300px; height: 300px; border-radius: 50%; object-fit: cover; object-position: 50% 30%;
+      border: 3px solid var(--accent); padding: 6px; background: var(--bg);
+      box-shadow: var(--shadow); display: block;
+    }
+    .hero-text { flex: 1; }
+    h1 { font: 700 3.2rem/1.05 var(--title); letter-spacing: -.02em; margin-bottom: .2em; }
+    .subtitle { font: 500 1.25rem var(--title); color: var(--accent); margin-bottom: 18px; }
+    .subtitle a { text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+    .subtitle a:hover { border-bottom-color: currentColor; }
+    .lede { font-size: 1.05rem; max-width: 60ch; margin-bottom: 22px; }
+    .socials { display: flex; gap: 10px; flex-wrap: wrap; }
+    .socials a {
+      width: 42px; height: 42px; border-radius: var(--radius); display: grid; place-items: center;
+      background: var(--accent-soft); color: var(--accent); transition: background .2s, color .2s, transform .2s;
+    }
+    .socials a:hover { background: var(--accent); color: var(--bg); transform: translateY(-2px); }
+    .socials svg { width: 20px; height: 20px; }
+    .scroll-hint { margin-top: 36px; font: 400 .8rem var(--mono); color: var(--muted); text-decoration: none; display: inline-block; }
+
+    /* Sections */
+    section.block { padding: 24px 0 56px; }
+    h2 {
+      font: 700 2rem/1.1 var(--title); letter-spacing: -.01em;
+      border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 8px;
+    }
+    .section-note { color: var(--muted); margin-bottom: 28px; font-size: .95rem; }
+    h3.group { font: 600 1.05rem var(--title); color: var(--muted); text-transform: uppercase;
+               letter-spacing: .08em; margin: 32px 0 14px; font-size: .8rem; }
+
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .card {
+      background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 24px 24px 20px; display: flex; flex-direction: column;
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      transition: box-shadow .25s ease, transform .25s ease; min-width: 0;
+    }
+    .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+    .card.wide { grid-column: 1 / -1; }
+    .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+    .card h4 { font: 700 1.3rem var(--title); letter-spacing: -.01em; }
+    .card h4 a { color: var(--text); text-decoration: none; }
+    .card h4 a:hover { color: var(--accent); }
+    .version { font: 400 .78rem var(--mono); color: var(--accent); background: var(--accent-soft);
+               padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+    .kind { font: 500 .85rem var(--title); color: var(--green); margin-bottom: 12px; }
+    .card p { margin-bottom: 14px; }
+    .card p.detail { color: var(--muted); font-size: .93rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: auto 0 16px; padding-top: 4px; }
+    .tags span { font: 400 .74rem var(--mono); border: 1px solid var(--card-border);
+                 padding: 3px 8px; border-radius: 6px; color: var(--muted); }
+    .links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .btn {
+      font: 500 .88rem var(--title); text-decoration: none; padding: 8px 14px; border-radius: 8px;
+      border: 1px solid var(--accent); color: var(--accent); transition: background .2s, color .2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn.primary { background: var(--accent); color: var(--bg); }
+    .btn:hover { background: var(--accent); color: var(--bg); }
+    .btn svg { width: 15px; height: 15px; }
+
+    footer { padding: 32px 0 48px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--card-border); }
+    footer .container { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    @media (max-width: 860px) {
+      .hero { flex-direction: column; text-align: center; gap: 32px; }
+      .lede { margin-left: auto; margin-right: auto; }
+      .socials { justify-content: center; }
+      .profile { width: 220px; height: 220px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .container { padding: 0 16px; }
+      h1 { font-size: 2.3rem; }
+      .subtitle { font-size: 1.05rem; }
+      .card { padding: 20px 18px 18px; }
+      .card-head { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><div class="blob one"></div><div class="blob two"></div></div>
+
+  <div class="controls">
+    <button id="theme" aria-label="Toggle dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+  </div>
+
+  <main>
+    <section id="home">
+      <div class="container">
+        <div class="hero">
+          <div class="hero-image">
+            <img src="assets/giorgio.jpg" alt="Giorgio Maria Agazzi" class="profile" width="300" height="300">
+          </div>
+          <div class="hero-text">
+            <h1>Giorgio&nbsp;Maria Agazzi</h1>
+            <p class="subtitle">Neuroradiologist</p>
+            <p class="lede">
+              I write open-source software for the parts of radiology work that happen outside the
+              scanner: preparing and anonymising DICOM studies, finding and screening the literature,
+              and writing and checking articles for Radiopaedia. Everything here is free to use and the
+              code is on GitHub.
+            </p>
+            <div class="socials">
+              <a href="https://github.com/gmadevs" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
+              </a>
+              <!-- Add more links here (email, ORCID, LinkedIn…) by copying one <a> above. -->
+            </div>
+            <a class="scroll-hint" href="#projects">↓ projects</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="block">
+      <div class="container">
+        <h2>Projects</h2>
+        <p class="section-note">Unofficial tools. None of them is affiliated with or endorsed by Radiopaedia.org.</p>
+
+        <h3 class="group">Uploading and illustrating cases</h3>
+        <div class="grid">
+          <article class="card wide">
+            <div class="card-head">
+              <h4><a href="https://gmadevs.github.io/Radiouploader/">Radiouploader</a></h4>
+              <span class="version">v1.5.6</span>
+            </div>
+            <p class="kind">Desktop app · macOS, Linux, Windows</p>
+            <p>Prepares DICOM studies and uploads them to Radiopaedia.org as draft cases.</p>
+            <p class="detail">Accepts a folder, a zip or loose DICOM files. Splits series that hold more than one
+              acquisition (multiphase, diffusion, SWI), lets you pick series, blank burnt-in text, crop and set the window,
+              then anonymises with Radiopaedia's reference anonymiser and uploads. Also reads DICOM video.</p>
+            <div class="tags"><span>Electron</span><span>TypeScript</span><span>React</span><span>DICOM</span><span>AGPL-3.0</span></div>
+            <div class="links">
+              <a class="btn primary" href="https://gmadevs.github.io/Radiouploader/">Documentation</a>
+              <a class="btn" href="https://github.com/gmadevs/Radiouploader/releases/latest">Download</a>
+              <a class="btn" href="https://github.com/gmadevs/Radiouploader">GitHub</a>
+            </div>
+          </article>
+
+          <article class="card wide">
+            <div class="card-head">
+              <h4><a href="https://gmadevs.github.io/RadioIllustrator/">RadioIllustrator</a></h4>
+              <span class="version">web app</span>
+            </div>
+            <p class="kind">Runs in the browser · files stay on your computer</p>
+            <p>Draws coloured overlays on a DICOM series and exports the annotated series for a Radiopaedia case.</p>
+            <p class="detail">Draw a structure on a few key slices and the slices between them are interpolated.
+              A typical use is marking the spinal canal on every slice of a spine MRI.</p>
+            <div class="tags"><span>TypeScript</span><span>Vite</span><span>DICOM</span></div>
+            <div class="links">
+              <a class="btn primary" href="https://gmadevs.github.io/RadioIllustrator/">Open the app</a>
+              <a class="btn" href="https://github.com/gmadevs/RadioIllustrator">GitHub</a>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="group">Writing articles</h3>
+        <div class="grid">
+          <article class="card wide">
+            <div class="card-head">
+              <h4><a href="https://gmadevs.github.io/Radiowriter/">Radiowriter</a></h4>
+              <span class="version">v0.1.3</span>
+            </div>
+            <p class="kind">Python app in your browser · macOS, Linux, Windows</p>
+            <p>Finds the literature for a Radiopaedia article, screens it, and helps write the article against it.</p>
+            <p class="detail">PubMed search by line or by concept, ranking by citations and SCImago quartile, Unpaywall
+              for open-access copies, reading lists, and an editor with the section structures Radiopaedia recommends
+              for each kind of article. Only the searches leave your computer.</p>
+            <div class="tags"><span>Python</span><span>Streamlit</span><span>PubMed</span><span>Unpaywall</span><span>AGPL-3.0</span></div>
+            <div class="links">
+              <a class="btn primary" href="https://gmadevs.github.io/Radiowriter/">Documentation</a>
+              <a class="btn" href="https://pypi.org/project/radiowriter/">PyPI</a>
+              <a class="btn" href="https://github.com/gmadevs/Radiowriter">GitHub</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h4><a href="https://github.com/gmadevs/radiopaedia-citation-manager">Radiociter</a></h4>
+              <span class="version">v1.5.7</span>
+            </div>
+            <p class="kind">Userscript · Radiopaedia article editor</p>
+            <p>A citation picker in the editor toolbar. Type to cite a reference the article already has, or paste a
+              DOI or PMID to look it up, add it as the next numbered reference and cite it in one step.</p>
+            <div class="tags"><span>JavaScript</span><span>Tampermonkey</span><span>MIT</span></div>
+            <div class="links">
+              <a class="btn primary" href="https://raw.githubusercontent.com/gmadevs/radiopaedia-citation-manager/main/radiopaedia-cite.user.js">Install</a>
+              <a class="btn" href="https://github.com/gmadevs/radiopaedia-citation-manager">GitHub</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h4><a href="https://github.com/gmadevs/radiopaedia-lint-userscript">Radiopaedia Lint</a></h4>
+              <span class="version">v3.3.0</span>
+            </div>
+            <p class="kind">Userscript · every Radiopaedia article</p>
+            <p>A Lint button on each article. It sends the article to the radiopaedia.work linter and highlights the
+              findings on the text in the editor, coloured by severity, one at a time.</p>
+            <div class="tags"><span>JavaScript</span><span>Tampermonkey</span><span>MIT</span></div>
+            <div class="links">
+              <a class="btn primary" href="https://raw.githubusercontent.com/gmadevs/radiopaedia-lint-userscript/main/radiopaedia-lint.user.js">Install</a>
+              <a class="btn" href="https://greasyfork.org/en/scripts/592112-radiopaedia-lint">Greasy Fork</a>
+              <a class="btn" href="https://github.com/gmadevs/radiopaedia-lint-userscript">GitHub</a>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="group">Clinical tools</h3>
+        <div class="grid">
+          <article class="card wide">
+            <div class="card-head">
+              <h4><a href="https://gmadevs.github.io/neurotools/">Neuro-tools</a></h4>
+              <span class="version">in Italian</span>
+            </div>
+            <p class="kind">Static website · no backend, no login, no data collected</p>
+            <p>A collection of evidence-based clinical tools for general, paediatric and neonatal neuroradiology.
+              Each tool runs in the browser and is based on published references.</p>
+            <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>CC BY-NC-ND 4.0</span></div>
+            <div class="links">
+              <a class="btn primary" href="https://gmadevs.github.io/neurotools/">Open the site</a>
+              <a class="btn" href="https://github.com/gmadevs/neurotools">GitHub</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span>© <span id="year">2026</span> Giorgio Maria Agazzi</span>
+      <a href="https://github.com/gmadevs">github.com/gmadevs</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const root = document.documentElement;
+    try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch (e) {}
+    document.getElementById('theme').addEventListener('click', () => {
+      const dark = root.dataset.theme
+        ? root.dataset.theme === 'dark'
+        : matchMedia('(prefers-color-scheme: dark)').matches;
+      root.dataset.theme = dark ? 'light' : 'dark';
+      try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+    });
+  </script>
+</body>
+</html>
