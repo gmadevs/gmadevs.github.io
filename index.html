@@ -219,13 +219,15 @@
           <article class="card wide">
             <div class="card-head">
               <h4><a href="https://gmadevs.github.io/Radiouploader/">Radiouploader</a></h4>
-              <span class="version">v1.5.6</span>
+              <span class="version">v1.6.0</span>
             </div>
             <p class="kind">Desktop app · macOS, Linux, Windows</p>
             <p>Prepares DICOM studies and uploads them to Radiopaedia.org as draft cases.</p>
             <p class="detail">Accepts a folder, a zip or loose DICOM files. Splits series that hold more than one
               acquisition (multiphase, diffusion, SWI), lets you pick series, blank burnt-in text, crop and set the window,
-              then anonymises with Radiopaedia's reference anonymiser and uploads. Also reads DICOM video.</p>
+              then anonymises with Radiopaedia's reference anonymiser and uploads. Also reads DICOM video and can add
+              coronal, sagittal and MIP reformats. Since 1.6.0 you can draw coloured structures on a stack and add the
+              annotated copy, with a legend, to the case. On macOS it can also be installed with Homebrew.</p>
             <div class="tags"><span>Electron</span><span>TypeScript</span><span>React</span><span>DICOM</span><span>AGPL-3.0</span></div>
             <div class="links">
               <a class="btn primary" href="https://gmadevs.github.io/Radiouploader/">Documentation</a>
@@ -242,7 +244,8 @@
             <p class="kind">Runs in the browser · files stay on your computer</p>
             <p>Draws coloured overlays on a DICOM series and exports the annotated series for a Radiopaedia case.</p>
             <p class="detail">Draw a structure on a few key slices and the slices between them are interpolated.
-              A typical use is marking the spinal canal on every slice of a spine MRI.</p>
+              A typical use is marking the spinal canal on every slice of a spine MRI. Radiouploader has the same
+              drawing tools built in.</p>
             <div class="tags"><span>TypeScript</span><span>Vite</span><span>DICOM</span></div>
             <div class="links">
               <a class="btn primary" href="https://gmadevs.github.io/RadioIllustrator/">Open the app</a>
@@ -256,13 +259,15 @@
           <article class="card wide">
             <div class="card-head">
               <h4><a href="https://gmadevs.github.io/Radiowriter/">Radiowriter</a></h4>
-              <span class="version">v0.1.3</span>
+              <span class="version">v0.1.8</span>
             </div>
             <p class="kind">Python app in your browser · macOS, Linux, Windows</p>
             <p>Finds the literature for a Radiopaedia article, screens it, and helps write the article against it.</p>
-            <p class="detail">PubMed search by line or by concept, ranking by citations and SCImago quartile, Unpaywall
-              for open-access copies, reading lists, and an editor with the section structures Radiopaedia recommends
-              for each kind of article. Only the searches leave your computer.</p>
+            <p class="detail">PubMed search by line or by concept with every PubMed filter, ranking by citations and
+              SCImago quartile, Unpaywall for open-access copies, reading lists, and a PDF library with a reader you
+              can highlight in. The editor has the section structures Radiopaedia recommends for each kind of article,
+              runs Radiopaedia's linter rules on the draft and exports the HTML their editor accepts. Only the
+              searches and lookups leave your computer.</p>
             <div class="tags"><span>Python</span><span>Streamlit</span><span>PubMed</span><span>Unpaywall</span><span>AGPL-3.0</span></div>
             <div class="links">
               <a class="btn primary" href="https://gmadevs.github.io/Radiowriter/">Documentation</a>
